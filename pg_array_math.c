@@ -176,7 +176,7 @@ static bool int8_mul_overflow(int64 a, int64 b, int64 *result)
     if (root > 0 && root > n / root)
         root--;
 
-    if (root < 3037000499ULL &&
+    if (root < 4294967295ULL &&
         root + 1 <= n / (root + 1))
         root++;
 
