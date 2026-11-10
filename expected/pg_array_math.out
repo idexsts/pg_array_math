@@ -1,0 +1,776 @@
+CREATE EXTENSION pg_array_math;
+--тестовые запросы на функцию array_add
+SELECT array_add(ARRAY[1, 2, 3], ARRAY[4, 5, 6]); --5,7,9
+ array_add 
+-----------
+ {5,7,9}
+(1 row)
+
+SELECT array_add(ARRAY[-1, -2, -3], ARRAY[4, 5, 6]); --3,3,3
+ array_add 
+-----------
+ {3,3,3}
+(1 row)
+
+SELECT array_add(ARRAY[0, 0, 0], ARRAY[0, 0, 0]); --0,0,0
+ array_add 
+-----------
+ {0,0,0}
+(1 row)
+
+SELECT array_add(
+    ARRAY[1.5, 2.5]::double precision[],
+    ARRAY[0.5, 1.5]::double precision[]
+);--2,4
+ array_add 
+-----------
+ {2,4}
+(1 row)
+
+SELECT array_add(
+    ARRAY[10000000000, 20000000000]::bigint[],
+    ARRAY[30000000000, 40000000000]::bigint[]
+);
+         array_add         
+---------------------------
+ {40000000000,60000000000}
+(1 row)
+
+SELECT array_add(
+    ARRAY[1.123456789, 2.987654321]::numeric[],
+    ARRAY[3.111111111, 4.222222222]::numeric[]
+);
+         array_add         
+---------------------------
+ {4.234567900,7.209876543}
+(1 row)
+
+SELECT array_add(ARRAY[1, NULL, 3], ARRAY[4, 5, NULL]); --5,null,null
+   array_add   
+---------------
+ {5,NULL,NULL}
+(1 row)
+
+SELECT array_add(ARRAY[]::integer[], ARRAY[]::integer[]); --empty
+ array_add 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение INTEGER
+SELECT array_add(ARRAY[2147483647], ARRAY[1]);
+ERROR:  integer addition overflow
+-- Переполнение BIGINT
+SELECT array_add(
+    ARRAY[9223372036854775807]::bigint[],
+    ARRAY[1]::bigint[]
+);
+ERROR:  bigint addition overflow
+-- NaN
+SELECT array_add(ARRAY['NaN'::double precision], ARRAY[1.0::double precision]);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_add(ARRAY['Infinity'::double precision], ARRAY[1.0::double precision]);
+ERROR:  Infinity values are not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_add(ARRAY[1.7e308]::double precision[], ARRAY[1.7e308]::double precision[]);
+ERROR:  double precision addition overflow
+-- Разное количество элементов
+SELECT array_add(ARRAY[1, 2], ARRAY[1, 2, 3]);
+ERROR:  array lengths must match
+-- array_sub
+SELECT array_sub(ARRAY[10, 20, 30], ARRAY[1, 2, 3]); --9,18,27
+ array_sub 
+-----------
+ {9,18,27}
+(1 row)
+
+SELECT array_sub(ARRAY[0, 0, 0], ARRAY[0, 0, 0]); --0,0,0
+ array_sub 
+-----------
+ {0,0,0}
+(1 row)
+
+SELECT array_sub(
+    ARRAY[5.5, 10.5]::double precision[],
+    ARRAY[1.5, 2.5]::double precision[]
+); --4,8
+ array_sub 
+-----------
+ {4,8}
+(1 row)
+
+SELECT array_sub(
+    ARRAY[50000000000, 60000000000]::bigint[],
+    ARRAY[10000000000, 20000000000]::bigint[]
+);
+         array_sub         
+---------------------------
+ {40000000000,40000000000}
+(1 row)
+
+SELECT array_sub(
+    ARRAY[5.75, 8.5]::numeric[],
+    ARRAY[2.25, 3.5]::numeric[]
+);
+ array_sub  
+------------
+ {3.50,5.0}
+(1 row)
+
+SELECT array_sub(ARRAY[10, NULL, 30], ARRAY[1, 2, NULL]); --9,null,null
+   array_sub   
+---------------
+ {9,NULL,NULL}
+(1 row)
+
+SELECT array_sub(ARRAY[]::integer[], ARRAY[]::integer[]); --empty
+ array_sub 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение BIGINT: максимальное значение - (-1)
+SELECT array_sub(
+    ARRAY[9223372036854775807]::bigint[],
+    ARRAY[-1]::bigint[]
+);
+ERROR:  bigint subtraction overflow
+-- NaN
+SELECT array_sub(
+    ARRAY['NaN'::double precision],
+    ARRAY[1.0::double precision]
+);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_sub(
+    ARRAY['Infinity'::double precision],
+    ARRAY[1.0::double precision]
+);
+ERROR:  Infinity values are not allowed
+-- длина
+SELECT array_sub(ARRAY[1, 2], ARRAY[1, 2, 3]);
+ERROR:  array lengths must match
+-- array_mul
+SELECT array_mul(ARRAY[2, 3, 4], ARRAY[5, 6, 7]);
+ array_mul  
+------------
+ {10,18,28}
+(1 row)
+
+SELECT array_mul(ARRAY[2, -3, 0], ARRAY[4, 2, 100]);
+ array_mul 
+-----------
+ {8,-6,0}
+(1 row)
+
+SELECT array_mul(
+    ARRAY[100000]::bigint[],
+    ARRAY[200000]::bigint[]
+);
+   array_mul   
+---------------
+ {20000000000}
+(1 row)
+
+SELECT array_mul(
+    ARRAY[1.5, 2.0]::double precision[],
+    ARRAY[2.0, 3.0]::double precision[]
+);
+ array_mul 
+-----------
+ {3,6}
+(1 row)
+
+SELECT array_mul(
+    ARRAY[1.25, 2.5]::numeric[],
+    ARRAY[2.0, 3.0]::numeric[]
+);
+  array_mul   
+--------------
+ {2.500,7.50}
+(1 row)
+
+SELECT array_mul(ARRAY[2, NULL, 4], ARRAY[3, 5, NULL]);
+   array_mul   
+---------------
+ {6,NULL,NULL}
+(1 row)
+
+SELECT array_mul(ARRAY[]::integer[], ARRAY[]::integer[]);
+ array_mul 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение SMALLINT
+SELECT array_mul(
+    ARRAY[30000]::smallint[],
+    ARRAY[2]::smallint[]
+);
+ERROR:  smallint multiplication overflow
+-- Переполнение INTEGER
+SELECT array_mul(ARRAY[2147483647], ARRAY[2]);
+ERROR:  integer multiplication overflow
+-- Переполнение BIGINT
+SELECT array_mul(
+    ARRAY[9223372036854775807]::bigint[],
+    ARRAY[2]::bigint[]
+);
+ERROR:  bigint multiplication overflow
+-- NaN
+SELECT array_mul(
+    ARRAY['NaN'::double precision],
+    ARRAY[2.0::double precision]
+);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_mul(
+    ARRAY['Infinity'::double precision],
+    ARRAY[2.0::double precision]
+);
+ERROR:  Infinity values are not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_mul(
+    ARRAY[1.7e308]::double precision[],
+    ARRAY[2.0]::double precision[]
+);
+ERROR:  double precision multiplication overflow
+-- Разное количество элементов
+SELECT array_mul(ARRAY[1, 2], ARRAY[1, 2, 3]);
+ERROR:  array lengths must match
+--array_div
+SELECT array_div(ARRAY[8, 9, 10], ARRAY[2, 3, 2]);
+ array_div 
+-----------
+ {4,3,5}
+(1 row)
+
+SELECT array_div(ARRAY[10, -9, 20], ARRAY[2, 2, 5]);
+ array_div 
+-----------
+ {5,-4,4}
+(1 row)
+
+SELECT array_div(
+    ARRAY[10000000000]::bigint[],
+    ARRAY[2]::bigint[]
+);
+  array_div   
+--------------
+ {5000000000}
+(1 row)
+
+SELECT array_div(
+    ARRAY[5.0, 9.0]::double precision[],
+    ARRAY[2.0, 3.0]::double precision[]
+);
+ array_div 
+-----------
+ {2.5,3}
+(1 row)
+
+SELECT array_div(
+    ARRAY[5.5, 9.0]::numeric[],
+    ARRAY[2.0, 3.0]::numeric[]
+);
+                array_div                
+-----------------------------------------
+ {2.7500000000000000,3.0000000000000000}
+(1 row)
+
+SELECT array_div(ARRAY[10, NULL, 30], ARRAY[2, 5, NULL]);
+   array_div   
+---------------
+ {5,NULL,NULL}
+(1 row)
+
+SELECT array_div(ARRAY[]::integer[], ARRAY[]::integer[]);
+ array_div 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- Деление INTEGER на ноль
+SELECT array_div(ARRAY[10, 20], ARRAY[2, 0]);
+ERROR:  integer division by zero
+-- Деление SMALLINT на ноль
+SELECT array_div(
+    ARRAY[10]::smallint[],
+    ARRAY[0]::smallint[]
+);
+ERROR:  smallint division by zero
+-- Деление BIGINT: минимальное значение на -1
+SELECT array_div(
+    ARRAY[-9223372036854775807 - 1]::bigint[],
+    ARRAY[-1]::bigint[]
+);
+ERROR:  bigint division overflow
+-- NaN
+SELECT array_div(
+    ARRAY['NaN'::double precision],
+    ARRAY[2.0::double precision]
+);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_div(
+    ARRAY['Infinity'::double precision],
+    ARRAY[2.0::double precision]
+);
+ERROR:  Infinity values are not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_div(
+    ARRAY[1.7e308]::double precision[],
+    ARRAY[0.1]::double precision[]
+);
+ERROR:  double precision division overflow
+-- Разное количество элементов
+SELECT array_div(ARRAY[1, 2], ARRAY[1, 2, 3]);
+ERROR:  array lengths must match
+--деление numeric на 0 
+SELECT array_div(
+    ARRAY[10.0]::numeric[],
+    ARRAY[0.0]::numeric[]
+);
+ERROR:  division by zero
+--array_add_scalar
+SELECT array_add_scalar(ARRAY[1, -2, 0], 5);
+ array_add_scalar 
+------------------
+ {6,3,5}
+(1 row)
+
+SELECT array_add_scalar(
+    ARRAY[10000000000, 20000000000]::bigint[],
+    5000000000::bigint
+);
+     array_add_scalar      
+---------------------------
+ {15000000000,25000000000}
+(1 row)
+
+SELECT array_add_scalar(
+    ARRAY[1.5, 2.5, 3.0]::double precision[],
+    0.5::double precision
+);
+ array_add_scalar 
+------------------
+ {2,3,3.5}
+(1 row)
+
+SELECT array_add_scalar(
+    ARRAY[1.25, 2.5]::numeric[],
+    0.75::numeric
+);
+ array_add_scalar 
+------------------
+ {2.00,3.25}
+(1 row)
+
+SELECT array_add_scalar(ARRAY[1, NULL, 3], 5);
+ array_add_scalar 
+------------------
+ {6,NULL,8}
+(1 row)
+
+SELECT array_add_scalar(ARRAY[]::integer[], 5);
+ array_add_scalar 
+------------------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение SMALLINT
+SELECT array_add_scalar(
+    ARRAY[32767]::smallint[],
+    1::smallint
+);
+ERROR:  smallint addition overflow
+-- Переполнение INTEGER
+SELECT array_add_scalar(
+    ARRAY[2147483647],
+    1
+);
+ERROR:  integer addition overflow
+-- Переполнение BIGINT
+SELECT array_add_scalar(
+    ARRAY[9223372036854775807]::bigint[],
+    1::bigint
+);
+ERROR:  bigint addition overflow
+-- NaN
+SELECT array_add_scalar(
+    ARRAY[1.0]::double precision[],
+    'NaN'::double precision
+);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_add_scalar(
+    ARRAY[1.0]::double precision[],
+    'Infinity'::double precision
+);
+ERROR:  Infinity values are not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_add_scalar(
+    ARRAY[1.7e308]::double precision[],
+    1.7e308::double precision
+);
+ERROR:  double precision addition overflow
+--array_mul_scalar
+SELECT array_mul_scalar(ARRAY[1, -2, 0], 5);
+ array_mul_scalar 
+------------------
+ {5,-10,0}
+(1 row)
+
+SELECT array_mul_scalar(
+    ARRAY[100000, 200000]::bigint[],
+    2::bigint
+);
+ array_mul_scalar 
+------------------
+ {200000,400000}
+(1 row)
+
+SELECT array_mul_scalar(
+    ARRAY[1.5, 2.5, 3.0]::double precision[],
+    2.0::double precision
+);
+ array_mul_scalar 
+------------------
+ {3,5,6}
+(1 row)
+
+SELECT array_mul_scalar(
+    ARRAY[1.25, 2.5]::numeric[],
+    2.0::numeric
+);
+ array_mul_scalar 
+------------------
+ {2.500,5.00}
+(1 row)
+
+SELECT array_mul_scalar(ARRAY[2, NULL, 4], 3);
+ array_mul_scalar 
+------------------
+ {6,NULL,12}
+(1 row)
+
+SELECT array_mul_scalar(ARRAY[]::integer[], 3);
+ array_mul_scalar 
+------------------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение SMALLINT
+SELECT array_mul_scalar(
+    ARRAY[30000]::smallint[],
+    2::smallint
+);
+ERROR:  smallint multiplication overflow
+-- Переполнение INTEGER
+SELECT array_mul_scalar(
+    ARRAY[2147483647],
+    2
+);
+ERROR:  integer multiplication overflow
+-- Переполнение BIGINT
+SELECT array_mul_scalar(
+    ARRAY[9223372036854775807]::bigint[],
+    2::bigint
+);
+ERROR:  bigint multiplication overflow
+-- NaN
+SELECT array_mul_scalar(
+    ARRAY[1.0]::double precision[],
+    'NaN'::double precision
+);
+ERROR:  NaN values are not allowed
+-- Infinity
+SELECT array_mul_scalar(
+    ARRAY[1.0]::double precision[],
+    'Infinity'::double precision
+);
+ERROR:  Infinity values are not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_mul_scalar(
+    ARRAY[1.7e308]::double precision[],
+    2.0::double precision
+);
+ERROR:  double precision multiplication overflow
+--array_power
+SELECT array_power(ARRAY[2, 3, 4], 2::numeric);
+ array_power 
+-------------
+ {4,9,16}
+(1 row)
+
+SELECT array_power(
+    ARRAY[2, 3, 5]::bigint[],
+    3::numeric
+);
+ array_power 
+-------------
+ {8,27,125}
+(1 row)
+
+SELECT array_power(
+    ARRAY[2.0, 3.0, 4.0]::double precision[],
+    2::numeric
+);
+ array_power 
+-------------
+ {4,9,16}
+(1 row)
+
+SELECT array_power(
+    ARRAY[1.5, 2.5, 3.0]::numeric[],
+    2::numeric
+);
+                        array_power                         
+------------------------------------------------------------
+ {2.2500000000000000,6.2500000000000000,9.0000000000000000}
+(1 row)
+
+SELECT array_power(
+    ARRAY[4.0, 9.0]::double precision[],
+    0.5::numeric
+);
+ array_power 
+-------------
+ {2,3}
+(1 row)
+
+SELECT array_power(ARRAY[2, NULL, 4], 2::numeric);
+ array_power 
+-------------
+ {4,NULL,16}
+(1 row)
+
+SELECT array_power(ARRAY[]::integer[], 2::numeric);
+ array_power 
+-------------
+ {}
+(1 row)
+
+--ошибки!
+-- Отрицательная степень для INTEGER
+SELECT array_power(ARRAY[2, 3], -2::numeric);
+ERROR:  integer array exponent must be a non-negative integer
+-- Дробная степень для INTEGER
+SELECT array_power(ARRAY[2, 3], 1.5::numeric);
+ERROR:  integer array exponent must be a non-negative integer
+-- Переполнение SMALLINT
+SELECT array_power(ARRAY[100]::smallint[], 3::numeric);
+ERROR:  smallint power overflow
+-- Переполнение INTEGER
+SELECT array_power(ARRAY[100000]::integer[], 3::numeric);
+ERROR:  integer power overflow
+-- Переполнение BIGINT
+SELECT array_power(
+    ARRAY[9223372036854775807]::bigint[],
+    2::numeric
+);
+ERROR:  bigint power overflow
+-- Ноль в отрицательной степени
+SELECT array_power(
+    ARRAY[0.0]::double precision[],
+    -1::numeric
+);
+ERROR:  zero raised to a negative power is undefined
+-- Отрицательное число в дробной степени (NaN)
+SELECT array_power(
+    ARRAY[-4.0]::double precision[],
+    0.5::numeric
+);
+ERROR:  invalid argument for power function
+-- Переполнение DOUBLE PRECISION
+SELECT array_power(
+    ARRAY[1e200]::double precision[],
+    2::numeric
+);
+ERROR:  double precision power overflow
+-- Infinity во входном массиве
+SELECT array_power(
+    ARRAY['Infinity'::double precision],
+    2::numeric
+);
+ERROR:  input value must be finite
+--array_abs
+SELECT array_abs(ARRAY[-5, 0, 10]);
+ array_abs 
+-----------
+ {5,0,10}
+(1 row)
+
+SELECT array_abs(ARRAY[-10000000000, 0, 20000000000]::bigint[]);
+          array_abs          
+-----------------------------
+ {10000000000,0,20000000000}
+(1 row)
+
+SELECT array_abs(ARRAY[-1.5, 0.0, 2.5]::double precision[]);
+  array_abs  
+-------------
+ {1.5,0,2.5}
+(1 row)
+
+SELECT array_abs(ARRAY[-1.25, 0, 2.75]::numeric[]);
+   array_abs   
+---------------
+ {1.25,0,2.75}
+(1 row)
+
+SELECT array_abs(ARRAY[-5, NULL, 10]);
+  array_abs  
+-------------
+ {5,NULL,10}
+(1 row)
+
+SELECT array_abs(ARRAY[]::integer[]);
+ array_abs 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- Переполнение SMALLINT: модуль минимального значения
+SELECT array_abs(ARRAY[-32768]::smallint[]);
+ERROR:  smallint absolute value overflow
+-- Переполнение INTEGER
+SELECT array_abs(ARRAY[-2147483648]);
+ERROR:  integer absolute value overflow
+-- Переполнение BIGINT
+SELECT array_abs(ARRAY[-9223372036854775807 - 1]::bigint[]);
+ERROR:  bigint absolute value overflow
+-- NaN
+SELECT array_abs(ARRAY['NaN'::double precision]);
+ERROR:  NaN is not allowed
+-- Infinity
+SELECT array_abs(ARRAY['Infinity'::double precision]);
+ERROR:  input value must be finite
+--array_log
+SELECT array_log(ARRAY[1.0, 2.7182818, 10.0]::real[]);
+        array_log         
+--------------------------
+ {0,0.99999994,2.3025851}
+(1 row)
+
+SELECT array_log(ARRAY[1.0, 2.718281828, 10.0]::double precision[]);
+                array_log                 
+------------------------------------------
+ {0,0.9999999998311266,2.302585092994046}
+(1 row)
+
+SELECT array_log(ARRAY[1.0, 2.718281828, 10.0]::numeric[]);
+                         array_log                          
+------------------------------------------------------------
+ {0.0000000000000000,0.9999999998311267,2.3025850929940457}
+(1 row)
+
+SELECT array_log(ARRAY[1.0, NULL, 10.0]::double precision[]);
+         array_log          
+----------------------------
+ {0,NULL,2.302585092994046}
+(1 row)
+
+SELECT array_log(ARRAY[]::double precision[]);
+ array_log 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- INTEGER не поддерживается
+SELECT array_log(ARRAY[1, 2, 3]);
+ERROR:  integer arrays are not supported by array_log
+-- Ноль
+SELECT array_log(ARRAY[0.0]::double precision[]);
+ERROR:  natural logarithm is defined only for positive numbers
+-- Отрицательное число
+SELECT array_log(ARRAY[-1.0]::double precision[]);
+ERROR:  natural logarithm is defined only for positive numbers
+-- NaN
+SELECT array_log(ARRAY['NaN'::double precision]);
+ERROR:  NaN is not allowed
+-- Infinity
+SELECT array_log(ARRAY['Infinity'::double precision]);
+ERROR:  Infinity is not allowed
+-- NUMERIC: отрицательное число
+SELECT array_log(ARRAY[-1.0]::numeric[]);
+ERROR:  cannot take logarithm of a negative number
+--array_exp
+SELECT array_exp(ARRAY[0.0, 1.0, 2.0]::real[]);
+       array_exp        
+------------------------
+ {1,2.7182817,7.389056}
+(1 row)
+
+SELECT array_exp(ARRAY[0.0, 1.0, -1.0]::double precision[]);
+                 array_exp                 
+-------------------------------------------
+ {1,2.718281828459045,0.36787944117144233}
+(1 row)
+
+SELECT array_exp(ARRAY[0.0, 1.0, -1.0]::numeric[]);
+                         array_exp                          
+------------------------------------------------------------
+ {1.0000000000000000,2.7182818284590452,0.3678794411714423}
+(1 row)
+
+SELECT array_exp(ARRAY[0.0, NULL, 2.0]::double precision[]);
+         array_exp         
+---------------------------
+ {1,NULL,7.38905609893065}
+(1 row)
+
+SELECT array_exp(ARRAY[]::double precision[]);
+ array_exp 
+-----------
+ {}
+(1 row)
+
+--ошибки!
+-- INTEGER не поддерживается
+SELECT array_exp(ARRAY[1, 2, 3]);
+ERROR:  integer arrays are not supported by array_exp
+-- NaN
+SELECT array_exp(ARRAY['NaN'::double precision]);
+ERROR:  NaN is not allowed
+-- Infinity
+SELECT array_exp(ARRAY['Infinity'::double precision]);
+ERROR:  Infinity is not allowed
+-- Переполнение DOUBLE PRECISION
+SELECT array_exp(ARRAY[1000.0]::double precision[]);
+ERROR:  double precision exponential overflow
+-- Переполнение REAL
+SELECT array_exp(ARRAY[100.0]::real[]);
+ERROR:  real exponential overflow
+--большое количество элементов
+SELECT cardinality(
+    array_add(
+        ARRAY(SELECT generate_series(1, 2000000)::bigint),
+        ARRAY(SELECT generate_series(1, 2000000)::bigint)
+    )
+);
+ cardinality 
+-------------
+     2000000
+(1 row)
+
+SELECT cardinality(
+    array_add(
+        ARRAY(SELECT generate_series(1, 5000000)),
+        ARRAY(SELECT generate_series(1, 5000000))
+    )
+);
+ cardinality 
+-------------
+     5000000
+(1 row)
+
