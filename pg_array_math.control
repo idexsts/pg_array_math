@@ -1,0 +1,5 @@
+
+comment = 'The pg_array_math extension, which implements element‑wise arithmetic and mathematical operations on one‑dimensional numeric arrays.'
+default_version = '1.0'
+module_pathname = '$libdir/pg_array_math'
+relocatable = true

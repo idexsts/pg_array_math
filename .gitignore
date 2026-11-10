@@ -1,0 +1,19 @@
+# PostgreSQL build files
+*.o
+*.so
+*.a
+*.bc
+
+# Test results
+results/
+tmp_check/
+log/
+output_iso/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
