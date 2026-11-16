@@ -354,22 +354,49 @@ SELECT array_sqrt(
 -- Ожидается: ERROR:  cannot take square root of a negative number
 </p>
 
-<h3 align="center">4.8. Вычисление модуля</h3>
+<h3>4.8. Вычисление модуля</h3>
 
-<p align="justify">
-
+<p>
+SELECT array_abs(
+    ARRAY[-1.5, -2.75, 3.5]::numeric[]
+);
+-- Результат: {1.5,2.75,3.5}
+</p>
+<p>
+SELECT array_abs(
+    ARRAY[-2147483648]::integer[]
+);
+-- Ожидается: ERROR:  integer absolute value overflow
 </p>
 
-<h3 align="center">4.9. Вычисление логарифма</h3>
+<h3>4.9. Вычисление логарифма</h3>
 
-<p align="justify">
-
+<p >
+SELECT array_log(
+    ARRAY[1.0, 2.7182817, 7.389056]::real[]
+);
+-- Результат: {0,0.99999994,2}
+</p>
+<p >
+SELECT array_log(
+    ARRAY[1.0, 0.0, 2.0]::double precision[]
+);
+-- Ожидается: ERROR:  natural logarithm is defined only for positive numbers
 </p>
 
-<h3 align="center">4.10. Вычисление экспоненты</h3>
+<h3>4.10. Вычисление экспоненты</h3>
 
-<p align="justify">
-
+<p>
+SELECT array_exp(
+    ARRAY[0, 1, 2]::numeric[]
+);
+-- Результат: {1.0000000000000000,2.7182818284590452,7.3890560989306502}
+</p>
+<p>
+SELECT array_exp(
+    ARRAY[10000.0]::double precision[]
+);
+-- Ожидается: ERROR:  double precision exponential overflow
 </p>
 
 <h2 align="center">5. Результаты тестирования</h2>
