@@ -264,57 +264,29 @@ NULL-элементы обрабатываются отдельно от обы�
 
 </p>
 
-<h3 align="center">5.3. Проверка работы внутри транзакций</h3>
-
-<p align="justify">
-
-</p>
-
-<h3 align="center">5.4. Проверка параллельного выполнения</h3>
-
-<p align="justify">
-
-</p>
-
-<h3 align="center">5.5. Проверка на больших массивах</h3>
-
-<p align="justify">
-
-</p>
-
-<h3 align="center">5.6. Проверка обработки ошибок</h3>
-
-<p align="justify">
-
-</p>
 
 <h2 align="center">6. Установка и сборка</h2>
 
-<h3 align="center">6.1. Структура файлов расширения</h3>
+
+<h3 align="center">6.1. Сборка и установка через PGXS</h3>
 
 <p align="justify">
 
 </p>
 
-<h3 align="center">6.2. Сборка и установка через PGXS</h3>
+<h3 align="center">6.2. Интеграция в каталог contrib PostgreSQL</h3>
 
 <p align="justify">
 
 </p>
 
-<h3 align="center">6.3. Интеграция в каталог contrib PostgreSQL</h3>
+<h3 align="center">6.3. Подключение расширения к базе данных</h3>
 
 <p align="justify">
 
 </p>
 
-<h3 align="center">6.4. Подключение расширения к базе данных</h3>
-
-<p align="justify">
-
-</p>
-
-<h3 align="center">6.5. Проверка работы расширения</h3>
+<h3 align="center">6.4. Проверка работы расширения</h3>
 
 <p align="justify">
 
