@@ -207,13 +207,13 @@ NULL-элементы обрабатываются отдельно от обы�
 
 <h3>4.1. Сложение массивов</h3>
 
-<p >
+```sql
 SELECT array_add(
     ARRAY[1, 2, 3], 
     ARRAY[4, 5, 6]
 );
 -- Результат: {5,7,9}
-</p>
+```
 <p >
 SELECT array_add(
     ARRAY[1.5, 2.5, 3.5]::double precision[],
