@@ -1,5 +1,5 @@
 
-<h1 align="center">pg_array_math</h1>
+<h1 align="center" color="pink">pg_array_math</h1>
 
 <p align="justify">
 Краткое описание расширения pg_array_math.
