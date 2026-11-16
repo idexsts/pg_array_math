@@ -1,5 +1,5 @@
 
-<h1 align="center">Расширение __pg_array_math__</h1>
+<h1 align="center">Расширение **pg_array_math**</h1>
 
 <p align="justify">
 Краткое описание расширения pg_array_math.
