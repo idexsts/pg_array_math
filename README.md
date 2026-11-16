@@ -207,21 +207,21 @@ NULL-элементы обрабатываются отдельно от обы�
 
 <h3>4.1. Сложение массивов</h3>
 
-<p align="justify">
+<p >
 SELECT array_add(
     ARRAY[1, 2, 3], 
     ARRAY[4, 5, 6]
 );
 -- Результат: {5,7,9}
 </p>
-<p align="justify">
+<p >
 SELECT array_add(
     ARRAY[1.5, 2.5, 3.5]::double precision[],
     ARRAY[2.0, 3.0, 4.0]::double precision[]
 );
 -- Результат: {3.5,5.5,7.5}
 </p>
-<p align="justify">
+<p >
 SELECT array_add(
     ARRAY[1, 2, 3]::integer[],
     ARRAY[4, 5]::integer[]
@@ -230,21 +230,21 @@ SELECT array_add(
 </p>
 <h3>4.2. Вычитание массивов</h3>
 
-<p align="justify">
+<p >
 SELECT array_sub(
     ARRAY[10, 20, 30],
     ARRAY[1, 2, 3]
 );
 -- Результат: {9,18,27}
 </p>
-<p align="justify">
+<p >
 SELECT array_sub(
     ARRAY[100, 200, 300]::bigint[],
     ARRAY[10, 20, 30]::bigint[]
 );
 -- Результат: {90,180,270}
 </p>
-<p align="justify">
+<p >
 SELECT array_sub(
     ARRAY[10, 20, 30]::integer[],
     ARRAY[1, 2]::integer[]
@@ -253,21 +253,21 @@ SELECT array_sub(
 </p>
 <h3>4.3. Умножение массивов</h3>
 
-<p align="justify">
+<p >
 SELECT array_mul(
     ARRAY[2, 3, 4]::integer[],
     ARRAY[5, 6, 7]::integer[]
 );
 -- Результат: {10,18,28}
 </p>
-<p align="justify">
+<p >
 SELECT array_mul(
     ARRAY[1.5, 2.5, 3.5]::numeric[],
     ARRAY[2, 3, 4]::numeric[]
 );
 -- Результат: {3.0,7.5,14.0}
 </p>
-<p align="justify">
+<p >
 SELECT array_mul(
     ARRAY[2147483647, 2]::integer[],
     ARRAY[2, 3]::integer[]
@@ -277,21 +277,21 @@ SELECT array_mul(
 
 <h3>4.4. Деление массивов</h3>
 
-<p align="justify">
+<p >
 SELECT array_div(
     ARRAY[10.0, 20.0, 30.0]::double precision[],
     ARRAY[2.0, 4.0, 5.0]::double precision[]
 );
 -- Результат: {5,5,6}
 </p>
-<p align="justify">
+<p >
 SELECT array_div(
     ARRAY[10, 15, 20]::numeric[],
     ARRAY[2, 3, 4]::numeric[]
 );
 -- Результат: {5.0000000000000000,5.0000000000000000,5.0000000000000000}
 </p>
-<p align="justify">
+<p >
 SELECT array_div(
     ARRAY[10, 20, 30]::integer[],
     ARRAY[2, 0, 5]::integer[]
@@ -301,21 +301,21 @@ SELECT array_div(
 
 <h3>4.5. Арифметические операции с числом</h3>
 
-<p align="justify">
+<p >
 SELECT array_add_scalar(
     ARRAY[1, 2, 3]::integer[],
     10::integer
 );
 -- Результат: {11,12,13}
 </p>
-<p align="justify">
+<p >
 SELECT array_mul_scalar(
     ARRAY[1.5, 2.5, 3.5]::double precision[],
     2.0::double precision
 );
 -- Результат: {3,5,7}
 </p>
-<p align="justify">
+<p >
 SELECT array_add_scalar(
     ARRAY[2147483647]::integer[],
     1::integer
@@ -324,14 +324,14 @@ SELECT array_add_scalar(
 </p>
 <h3>4.6. Возведение элементов массива в степень</h3>
 
-<p align="justify">
+<p >
 postgres=# SELECT array_power(
     ARRAY[2.0, 3.0, 4.0]::double precision[],
     0.5::numeric
 );
 -- Результат:  {1.4142135623730951,1.7320508075688772,2}
 </p>
-<p align="justify">
+<p >
 SELECT array_power(
     ARRAY[100000]::integer[],
     3::numeric
@@ -341,13 +341,13 @@ SELECT array_power(
 
 <h3>4.7. Вычисление квадратного корня</h3>
 
-<p align="justify">
+<p >
 SELECT array_sqrt(
     ARRAY[4, 9, 16, 25]::bigint[]
 );
 -- Результат: {2,3,4,5}
 </p>
-<p align="justify">
+<p >
 SELECT array_sqrt(
     ARRAY[4, -9, 16]::integer[]
 );
