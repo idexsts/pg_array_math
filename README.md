@@ -214,66 +214,66 @@ SELECT array_add(
 );
 -- Результат: {5,7,9}
 ```
-<p >
+```sql
 SELECT array_add(
     ARRAY[1.5, 2.5, 3.5]::double precision[],
     ARRAY[2.0, 3.0, 4.0]::double precision[]
 );
 -- Результат: {3.5,5.5,7.5}
-</p>
-<p >
+```
+```sql
 SELECT array_add(
     ARRAY[1, 2, 3]::integer[],
     ARRAY[4, 5]::integer[]
 );
 -- Ожидается: ERROR:  array lengths must match
-</p>
+```
 <h3>4.2. Вычитание массивов</h3>
 
-<p >
+```sql
 SELECT array_sub(
     ARRAY[10, 20, 30],
     ARRAY[1, 2, 3]
 );
 -- Результат: {9,18,27}
-</p>
-<p >
+```
+```sql
 SELECT array_sub(
     ARRAY[100, 200, 300]::bigint[],
     ARRAY[10, 20, 30]::bigint[]
 );
 -- Результат: {90,180,270}
-</p>
-<p >
+```
+```sql
 SELECT array_sub(
     ARRAY[10, 20, 30]::integer[],
     ARRAY[1, 2]::integer[]
 );
 -- Ожидается: ERROR:  array lengths must match
-</p>
+```
 <h3>4.3. Умножение массивов</h3>
 
-<p >
+```sql
 SELECT array_mul(
     ARRAY[2, 3, 4]::integer[],
     ARRAY[5, 6, 7]::integer[]
 );
 -- Результат: {10,18,28}
-</p>
-<p >
+```
+```sql
 SELECT array_mul(
     ARRAY[1.5, 2.5, 3.5]::numeric[],
     ARRAY[2, 3, 4]::numeric[]
 );
 -- Результат: {3.0,7.5,14.0}
-</p>
-<p >
+```
+```sql
 SELECT array_mul(
     ARRAY[2147483647, 2]::integer[],
     ARRAY[2, 3]::integer[]
 );
 -- Ожидается ошибка: ERROR:  integer multiplication overflow
-</p>
+```
 
 <h3>4.4. Деление массивов</h3>
 
