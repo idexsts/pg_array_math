@@ -203,6 +203,7 @@ NULL-элементы обрабатываются отдельно от обы�
 | `array_log` | `anyarray` | `anyarray` | Вычисление натурального логарифма каждого элемента массива |
 | `array_exp` | `anyarray` | `anyarray` | Вычисление экспоненты каждого элемента массива |
 
+<a id="sсenarios"></a>
 <h2 align="center">4. Сценарии использования</h2>
 
 <h3>4.1. Сложение массивов</h3>
@@ -446,19 +447,51 @@ Result: PASS
 <h2 align="center">6. Установка и сборка</h2>
 
 
-<h3 align="center">6.1. Сборка и установка через PGXS</h3>
+<h3>6.1. Сборка и установка через PGXS</h3>
 
-<p align="justify">
+Для сборки расширения отдельно от исходного дерева PostgreSQL используется PGXS (PostgreSQL Extension Building Infrastructure).
 
-</p>
+Перейдите в каталог расширения:
 
-<h3 align="center">6.2. Интеграция в каталог contrib PostgreSQL</h3>
+```bash
+cd ~/postgres/pg_array_math
+```
 
-<p align="justify">
+Выполните сборку:
 
-</p>
+```bash
+make USE_PGXS=1
+```
 
-<h3 align="center">6.3. Подключение расширения к базе данных</h3>
+Установите расширение:
+
+```bash
+make USE_PGXS=1 install
+```
+
+При необходимости для установки в системные каталоги могут потребоваться права администратора.
+
+<h3>6.2. Интеграция в каталог contrib PostgreSQL</h3>
+
+Для интеграции расширения в исходное дерево PostgreSQL необходимо разместить его в каталоге `contrib`.
+
+Скопируйте каталог расширения в `contrib`. 
+Добавьте `pg_array_math` в список `SUBDIRS` файла `contrib/Makefile`.
+
+Перейдите в корневой каталог исходного дерева PostgreSQL и выполните сборку: 
+```bash
+make -C contrib/pg_array_math
+```
+Установите расширение:
+```bash
+make -C contrib/pg_array_math install
+```
+Для проверки установки выполните:
+```bash
+make -C contrib/pg_array_math installcheck
+```
+
+<h3>6.3. Подключение расширения к базе данных</h3>
 
 <p align="justify">
 
@@ -466,9 +499,8 @@ Result: PASS
 
 <h3 align="center">6.4. Проверка работы расширения</h3>
 
-<p align="justify">
+После подключения расширения можно проверить работу реализованных функций с помощью SQL-запросов. См. ["4. Сценарии использования"](#scenarios).
 
-</p>
 
 <h2 align="center">7. Заключение</h2>
 
