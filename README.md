@@ -278,25 +278,80 @@ SELECT array_mul(
 <h3>4.4. Деление массивов</h3>
 
 <p align="justify">
-
+SELECT array_div(
+    ARRAY[10.0, 20.0, 30.0]::double precision[],
+    ARRAY[2.0, 4.0, 5.0]::double precision[]
+);
+-- Результат: {5,5,6}
+</p>
+<p align="justify">
+SELECT array_div(
+    ARRAY[10, 15, 20]::numeric[],
+    ARRAY[2, 3, 4]::numeric[]
+);
+-- Результат: {5.0000000000000000,5.0000000000000000,5.0000000000000000}
+</p>
+<p align="justify">
+SELECT array_div(
+    ARRAY[10, 20, 30]::integer[],
+    ARRAY[2, 0, 5]::integer[]
+);
+-- Ожидается: ERROR:  integer division by zero
 </p>
 
-<h3 align="center">4.5. Арифметические операции с числом</h3>
+<h3>4.5. Арифметические операции с числом</h3>
 
 <p align="justify">
+SELECT array_add_scalar(
+    ARRAY[1, 2, 3]::integer[],
+    10::integer
+);
+-- Результат: {11,12,13}
+</p>
+<p align="justify">
+SELECT array_mul_scalar(
+    ARRAY[1.5, 2.5, 3.5]::double precision[],
+    2.0::double precision
+);
+-- Результат: {3,5,7}
+</p>
+<p align="justify">
+SELECT array_add_scalar(
+    ARRAY[2147483647]::integer[],
+    1::integer
+);
+-- Ожидается: ERROR:  integer addition overflow
+</p>
+<h3>4.6. Возведение элементов массива в степень</h3>
 
+<p align="justify">
+postgres=# SELECT array_power(
+    ARRAY[2.0, 3.0, 4.0]::double precision[],
+    0.5::numeric
+);
+-- Результат:  {1.4142135623730951,1.7320508075688772,2}
+</p>
+<p align="justify">
+SELECT array_power(
+    ARRAY[100000]::integer[],
+    3::numeric
+);
+-- Ожидается: ERROR:  integer power overflow
 </p>
 
-<h3 align="center">4.6. Возведение элементов массива в степень</h3>
+<h3>4.7. Вычисление квадратного корня</h3>
 
 <p align="justify">
-
+SELECT array_sqrt(
+    ARRAY[4, 9, 16, 25]::bigint[]
+);
+-- Результат: {2,3,4,5}
 </p>
-
-<h3 align="center">4.7. Вычисление квадратного корня</h3>
-
 <p align="justify">
-
+SELECT array_sqrt(
+    ARRAY[4, -9, 16]::integer[]
+);
+-- Ожидается: ERROR:  cannot take square root of a negative number
 </p>
 
 <h3 align="center">4.8. Вычисление модуля</h3>
